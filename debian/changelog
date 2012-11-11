@@ -1,0 +1,6 @@
+opusfile (0.1-1) experimental; urgency=low
+
+  * Initial release.  Closes: #692942
+
+ -- Ron Lee <ron@debian.org>  Sun, 11 Nov 2012 10:38:53 +1030
+
