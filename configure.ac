@@ -1,6 +1,6 @@
 # autoconf source script for generating configure
 
-AC_INIT([opusfile], m4_esyscmd([doc/git-version.sh]))
+AC_INIT([opusfile], [0.2])
 
 AC_USE_SYSTEM_EXTENSIONS
 AC_SYS_LARGEFILE
@@ -22,7 +22,7 @@ dnl - interfaces added -> increment AGE
 dnl - interfaces removed -> AGE = 0
 
 OP_LT_CURRENT=0
-OP_LT_REVISION=0
+OP_LT_REVISION=1
 OP_LT_AGE=0
 
 AC_SUBST(OP_LT_CURRENT)
