@@ -1,6 +1,6 @@
 # autoconf source script for generating configure
 
-AC_INIT([opusfile], m4_esyscmd([doc/git-version.sh]))
+AC_INIT([opusfile], [0.2])
 
 AC_USE_SYSTEM_EXTENSIONS
 AC_SYS_LARGEFILE
