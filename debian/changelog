@@ -1,3 +1,14 @@
+opusfile (0.2+20130513-1) unstable; urgency=low
+
+  * Snapshot release for unstable.
+  * Fixes the pkg-config file to avoid overlinking.  Closes: #707969
+  * Split the URL handling into a separate library, so that linking with
+    openssl is only an issue for people who do need that functionality.
+    The main opusfile library can now be linked with anything again.
+    Closes:  #708008
+
+ -- Ron Lee <ron@debian.org>  Mon, 13 May 2013 21:43:40 +0930
+
 opusfile (0.2-1) experimental; urgency=low
 
   * Initial release.  Closes: #692942
