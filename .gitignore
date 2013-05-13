@@ -26,7 +26,6 @@ opusfile.pc
 opusfile-uninstalled.pc
 opusurl.pc
 opusurl-uninstalled.pc
-package_version
 unix/objs
 unix/opusfile_example
 unix/seeking_example
