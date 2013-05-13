@@ -15,6 +15,7 @@
 
  ********************************************************************/
 #include "internal.h"
+#include <sys/types.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -56,7 +57,18 @@ static int op_fread(void *_stream,unsigned char *_ptr,int _buf_size){
 static int op_fseek(void *_stream,opus_int64 _offset,int _whence){
 #if defined(_MSC_VER)
   return _fseeki64((FILE *)_stream,_offset,_whence);
+#elif defined(__MINGW32__)
+  /*i686-pc-mingw32 does not have fseeko() and requires
+     __MSVCRT_VERSION__>=0x800 for _fseeki64(), which screws up linking with
+     other libraries (that don't use MSVCRT80 from MSVC 2005 by default).
+    i686-w64-mingw32 does have fseeko() and respects _FILE_OFFSET_BITS, but I
+     don't know how to detect that at compile time.
+    We don't need to use fopen64(), as this just dispatches to fopen() in
+     mingw32.*/
+  return fseeko64((FILE *)_stream,(off64_t)_offset,_whence);
 #else
+  /*This function actually conforms to the SUSv2 and POSIX.1-2001, so we prefer
+     it except in the two special-cases above.*/
   return fseeko((FILE *)_stream,(off_t)_offset,_whence);
 #endif
 }
@@ -64,7 +76,18 @@ static int op_fseek(void *_stream,opus_int64 _offset,int _whence){
 static opus_int64 op_ftell(void *_stream){
 #if defined(_MSC_VER)
   return _ftelli64((FILE *)_stream);
+#elif defined(__MINGW32__)
+  /*i686-pc-mingw32 does not have ftello() and requires
+     __MSVCRT_VERSION__>=0x800 for _ftelli64(), which screws up linking with
+     other libraries (that don't use MSVCRT80 from MSVC 2005 by default).
+    i686-w64-mingw32 does have ftello() and respects _FILE_OFFSET_BITS, but I
+     don't know how to detect that at compile time.
+    We don't need to use fopen64(), as this just dispatches to fopen() in
+     mingw32.*/
+  return ftello64((FILE *)_stream);
 #else
+  /*This function actually conforms to the SUSv2 and POSIX.1-2001, so we prefer
+     it except in the two special-cases above.*/
   return ftello((FILE *)_stream);
 #endif
 }
@@ -110,7 +133,7 @@ static int op_mem_read(void *_stream,unsigned char *_ptr,int _buf_size){
   /*Check for EOF.*/
   if(pos>=size)return 0;
   /*Check for a short read.*/
-  _buf_size=(int)OP_MAX(size-pos,_buf_size);
+  _buf_size=(int)OP_MIN(size-pos,_buf_size);
   memcpy(_ptr,stream->data+pos,_buf_size);
   pos+=_buf_size;
   stream->pos=pos;

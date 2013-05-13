@@ -1,8 +1,8 @@
 .gitignore		export-ignore
 .gitattributes		export-ignore
 
+update_version		export-ignore
+
 /ci			export-ignore
-doc/git-version.sh	export-ignore
 doc/Makefile		export-ignore
 /unix			export-ignore
-

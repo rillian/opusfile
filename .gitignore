@@ -1,6 +1,9 @@
+*.a
+*.exe
 *.la
 *.lo
 *.o
+*.sw*
 *~
 .deps
 .dirstamp
@@ -9,6 +12,7 @@
 autom4te.cache/
 config.log
 config.status
+doc/Doxyfile
 examples/opusfile_example
 examples/seeking_example
 libopusfile-*.tar.*
@@ -18,4 +22,11 @@ m4/ltoptions.m4
 m4/ltsugar.m4
 m4/ltversion.m4
 m4/lt~obsolete.m4
-*.sw[lmnop]
+opusfile.pc
+opusfile-uninstalled.pc
+opusurl.pc
+opusurl-uninstalled.pc
+package_version
+unix/objs
+unix/opusfile_example
+unix/seeking_example
