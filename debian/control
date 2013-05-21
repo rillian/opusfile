@@ -29,7 +29,8 @@ Description: High-level API for basic manipulation of Ogg Opus audio streams
 Package: libopusfile-dev
 Section: libdevel
 Architecture: any
-Depends: libopusfile0 (= ${binary:Version})
+Depends: libopusfile0 (= ${binary:Version}), libopus-dev (>= 1.0.1), libogg-dev (>= 1.3.0)
+Recommends: libssl-dev
 Description: High-level API for basic manipulation of Ogg Opus audio streams
  libopusfile provides several sets of built-in routines for file and stream
  access, and may also use custom stream I/O routines provided by the embedded
