@@ -4,15 +4,17 @@ dnl The package_version file will be automatically synced to the git revision
 dnl by the update_version script when configured in the repository, but will
 dnl remain constant in tarball releases unless it is manually edited.
 m4_define([CURRENT_VERSION],
-          m4_esyscmd_s([ if test -e package_version || ./update_version; then
-                             . ./package_version
-                             printf "$PACKAGE_VERSION"
-                         else
-                             printf "unknown"
-                         fi ]))
+          m4_esyscmd([ ./update_version 2>/dev/null || true
+                       if test -e package_version; then
+                           . ./package_version
+                           printf "$PACKAGE_VERSION"
+                       else
+                           printf "unknown"
+                       fi ]))
 
 AC_INIT([opusfile],[CURRENT_VERSION],[opus@xiph.org])
 AC_CONFIG_SRCDIR([src/opusfile.c])
+AC_CONFIG_MACRO_DIR([m4])
 
 AC_USE_SYSTEM_EXTENSIONS
 AC_SYS_LARGEFILE
@@ -22,8 +24,6 @@ AM_MAINTAINER_MODE([enable])
 LT_INIT
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
-
-AC_CONFIG_MACRO_DIR([m4])
 
 dnl Library versioning for libtool.
 dnl Please update these for releases.
@@ -113,18 +113,22 @@ AS_IF([test "$enable_float" = "no"],
 AS_IF([test "$enable_fixed_point" = "yes"],
   [AC_DEFINE([OP_FIXED_POINT], [1], [Enable fixed-point calculation])],
   [dnl This only has to be tested for if float->fixed conversions are required
+   saved_LIBS="$LIBS"
    AC_SEARCH_LIBS([lrintf], [m], [
       AC_DEFINE([OP_HAVE_LRINTF], [1], [Enable use of lrintf function])
       lrintf_notice="
     Library for lrintf() ......... ${ac_cv_search_lrintf}"
    ])
+   LIBS="$saved_LIBS"
   ]
 )
-lrintf_lib="$ac_cv_search_lrintf"
-AS_IF([test "$ac_cv_search_lrintf" = "none required"],
-  [lrintf_lib=""]
-)
-AC_SUBST(lrintf_lib)
+
+AS_CASE(["$ac_cv_search_lrintf"],
+  ["no"],[],
+  ["none required"],[],
+  [lrintf_lib="$ac_cv_search_lrintf"])
+
+AC_SUBST([lrintf_lib])
 
 CC_ATTRIBUTE_VISIBILITY([default], [
   CC_FLAG_VISIBILITY([CFLAGS="${CFLAGS} -fvisibility=hidden"])
@@ -135,12 +139,14 @@ AC_ARG_ENABLE([doc],
   AS_HELP_STRING([--disable-doc], [Do not build API documentation]),,
   [enable_doc=yes]
 )
-AC_CHECK_PROG(HAVE_DOXYGEN, doxygen, yes, no)
-if test "$HAVE_DOXYGEN" != "yes" -o "$enable_doc" != "yes" ; then
-  HAVE_DOXYGEN="no"
-  enable_doc="no"
-fi
-AM_CONDITIONAL(HAVE_DOXYGEN, [test $HAVE_DOXYGEN = yes])
+
+AS_IF([test "$enable_doc" = "yes"], [
+  AC_CHECK_PROG([HAVE_DOXYGEN], [doxygen], [yes], [no])
+],[
+  HAVE_DOXYGEN=no
+])
+
+AM_CONDITIONAL([HAVE_DOXYGEN], [test "$HAVE_DOXYGEN" = "yes"])
 
 AC_CONFIG_FILES([
   Makefile
@@ -150,6 +156,7 @@ AC_CONFIG_FILES([
   opusurl-uninstalled.pc
   doc/Doxyfile
 ])
+AC_CONFIG_HEADERS([config.h])
 AC_OUTPUT
 
 AC_MSG_NOTICE([
