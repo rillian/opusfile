@@ -1,3 +1,9 @@
+opusfile (0.2+20130702-1) unstable; urgency=low
+
+  * Update the package dependencies too.  Closes: #707969 (again)
+
+ -- Ron Lee <ron@debian.org>  Tue, 02 Jul 2013 16:33:34 +0930
+
 opusfile (0.2+20130513-1) unstable; urgency=low
 
   * Snapshot release for unstable.
