@@ -2,5 +2,9 @@
 .gitattributes		export-ignore
 
 /ci			export-ignore
+doc/release.txt		export-ignore
 doc/Makefile		export-ignore
 /unix			export-ignore
+*.vcxproj*		export-ignore
+*.sln			export-ignore
+win32			export-ignore

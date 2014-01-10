@@ -121,5 +121,5 @@
 /* Define to 1 if you need to in order for `stat' and other things to work. */
 #undef _POSIX_SOURCE
 
-/* We need at least WindowsXP for getaddrinfo/freaddrinfo */
+/* We need at least WindowsXP for getaddrinfo/freeaddrinfo */
 #undef _WIN32_WINNT

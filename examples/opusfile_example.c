@@ -21,12 +21,12 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
-#if defined(_WIN32)
-/*We need the following two to set stdin/stdout to binary.*/
-# include <io.h>
-# include <fcntl.h>
-#endif
 #include <opusfile.h>
+#if defined(_WIN32)
+# include "win32utf8.h"
+# undef fileno
+# define fileno _fileno
+#endif
 
 static void print_duration(FILE *_fp,ogg_int64_t _nsamples,int _frac){
   ogg_int64_t seconds;
@@ -138,15 +138,7 @@ int main(int _argc,const char **_argv){
   int           is_ssl;
   int           output_seekable;
 #if defined(_WIN32)
-# undef fileno
-# define fileno _fileno
-  /*We need to set stdin/stdout to binary mode. Damn windows.*/
-  /*Beware the evil ifdef. We avoid these where we can, but this one we
-     cannot.
-    Don't add any more.
-    You'll probably go to hell if you do.*/
-  _setmode(fileno(stdin),_O_BINARY);
-  _setmode(fileno(stdout),_O_BINARY);
+  win32_utf8_setup(&_argc,&_argv);
 #endif
   if(_argc!=2){
     fprintf(stderr,"Usage: %s <file.opus>\n",_argv[0]);
@@ -158,8 +150,9 @@ int main(int _argc,const char **_argv){
     of=op_open_callbacks(op_fdopen(&cb,fileno(stdin),"rb"),&cb,NULL,0,&ret);
   }
   else{
+    OpusServerInfo info;
     /*Try to treat the argument as a URL.*/
-    of=op_open_url(_argv[1],&ret,NULL);
+    of=op_open_url(_argv[1],&ret,OP_GET_SERVER_INFO(&info),NULL);
 #if 0
     if(of==NULL){
       OpusFileCallbacks  cb={NULL,NULL,NULL,NULL};
@@ -172,10 +165,37 @@ int main(int _argc,const char **_argv){
     }
 #else
     if(of==NULL)of=op_open_file(_argv[1],&ret);
-    /*This is not a very good check, but at least it won't give false
-       positives.*/
-    else is_ssl=strncmp(_argv[1],"https:",6)==0;
 #endif
+    else{
+      if(info.name!=NULL){
+        fprintf(stderr,"Station name: %s\n",info.name);
+      }
+      if(info.description!=NULL){
+        fprintf(stderr,"Station description: %s\n",info.description);
+      }
+      if(info.genre!=NULL){
+        fprintf(stderr,"Station genre: %s\n",info.genre);
+      }
+      if(info.url!=NULL){
+        fprintf(stderr,"Station homepage: %s\n",info.url);
+      }
+      if(info.bitrate_kbps>=0){
+        fprintf(stderr,"Station bitrate: %u kbps\n",
+         (unsigned)info.bitrate_kbps);
+      }
+      if(info.is_public>=0){
+        fprintf(stderr,"%s\n",
+         info.is_public?"Station is public.":"Station is private.");
+      }
+      if(info.server!=NULL){
+        fprintf(stderr,"Server software: %s\n",info.server);
+      }
+      if(info.content_type!=NULL){
+        fprintf(stderr,"Content-Type: %s\n",info.content_type);
+      }
+      is_ssl=info.is_ssl;
+      opus_server_info_clear(&info);
+    }
   }
   if(of==NULL){
     fprintf(stderr,"Failed to open file '%s': %i\n",_argv[1],ret);
@@ -264,7 +284,28 @@ int main(int _argc,const char **_argv){
         tags=op_tags(of,li);
         fprintf(stderr,"  Encoded by: %s\n",tags->vendor);
         for(ci=0;ci<tags->comments;ci++){
-          fprintf(stderr,"  %s\n",tags->user_comments[ci]);
+          const char *comment;
+          comment=tags->user_comments[ci];
+          if(opus_tagncompare("METADATA_BLOCK_PICTURE",22,comment)==0){
+            OpusPictureTag pic;
+            int            err;
+            err=opus_picture_tag_parse(&pic,comment);
+            fprintf(stderr,"  %.23s",comment);
+            if(err>=0){
+              fprintf(stderr,"%u|%s|%s|%ux%ux%u",pic.type,pic.mime_type,
+               pic.description,pic.width,pic.height,pic.depth);
+              if(pic.colors!=0)fprintf(stderr,"/%u",pic.colors);
+              if(pic.format==OP_PIC_FORMAT_URL){
+                fprintf(stderr,"|%s\n",pic.data);
+              }
+              else{
+                fprintf(stderr,"|<%u bytes of image data>\n",pic.data_length);
+              }
+              opus_picture_tag_clear(&pic);
+            }
+            else fprintf(stderr,"<error parsing picture tag>\n");
+          }
+          else fprintf(stderr,"  %s\n",tags->user_comments[ci]);
         }
         fprintf(stderr,"\n");
         if(!op_seekable(of)){
@@ -289,6 +330,7 @@ int main(int _argc,const char **_argv){
         print_size(stderr,bitrate,1," ");
         fprintf(stderr,"bps)                    \r");
         pcm_print_offset=pcm_offset;
+        fflush(stderr);
       }
       next_pcm_offset=op_pcm_tell(of);
       if(pcm_offset+ret!=next_pcm_offset){
