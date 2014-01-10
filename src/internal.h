@@ -92,8 +92,10 @@ void op_fatal_impl(const char *_str,const char *_file,int _line);
 #  define OP_ALWAYS_TRUE(_cond) ((void)(_cond))
 # endif
 
-# define OP_INT64_MAX ((ogg_int64_t)0x7FFFFFFFFFFFFFFFLL)
+# define OP_INT64_MAX (2*(((ogg_int64_t)1<<62)-1)|1)
 # define OP_INT64_MIN (-OP_INT64_MAX-1)
+# define OP_INT32_MAX (2*(((ogg_int32_t)1<<30)-1)|1)
+# define OP_INT32_MIN (-OP_INT32_MAX-1)
 
 # define OP_MIN(_a,_b)        ((_a)<(_b)?(_a):(_b))
 # define OP_MAX(_a,_b)        ((_a)>(_b)?(_a):(_b))
@@ -201,6 +203,10 @@ struct OggOpusFile{
   int                op_count;
   /*Central working state for the packet-to-PCM decoder.*/
   OpusMSDecoder     *od;
+  /*The application-provided packet decode callback.*/
+  op_decode_cb_func  decode_cb;
+  /*The application-provided packet decode callback context.*/
+  void              *decode_cb_ctx;
   /*The stream count used to initialize the decoder.*/
   int                od_stream_count;
   /*The coupled stream count used to initialize the decoder.*/
@@ -215,6 +221,11 @@ struct OggOpusFile{
   int                od_buffer_pos;
   /*The number of valid samples in the decoded buffer.*/
   int                od_buffer_size;
+  /*The type of gain offset to apply.
+    One of OP_HEADER_GAIN, OP_TRACK_GAIN, or OP_ABSOLUTE_GAIN.*/
+  int                gain_type;
+  /*The offset to apply to the gain.*/
+  opus_int32         gain_offset_q8;
   /*Internal state for soft clipping and dithering float->short output.*/
 #if !defined(OP_FIXED_POINT)
 # if defined(OP_SOFT_CLIP)
@@ -224,6 +235,7 @@ struct OggOpusFile{
   float              dither_b[OP_NCHANNELS_MAX*4];
   opus_uint32        dither_seed;
   int                dither_mute;
+  int                dither_disabled;
   /*The number of channels represented by the internal state.
     This gets set to 0 whenever anything that would prevent state propagation
      occurs (switching between the float/short APIs, or between the
