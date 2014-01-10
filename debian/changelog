@@ -1,3 +1,10 @@
+opusfile (0.5-1) unstable; urgency=low
+
+  * Much new goodness, too much to list here, see git for details.
+  * Add a symbols file now that we're back on a tagged release again.
+
+ -- Ron Lee <ron@debian.org>  Sat, 11 Jan 2014 07:35:41 +1030
+
 opusfile (0.2+20130702-1) unstable; urgency=low
 
   * Update the package dependencies too.  Closes: #707969 (again)
