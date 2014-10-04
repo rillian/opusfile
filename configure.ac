@@ -34,7 +34,7 @@ dnl - interfaces added -> increment AGE
 dnl - interfaces removed -> AGE = 0
 
 OP_LT_CURRENT=3
-OP_LT_REVISION=0
+OP_LT_REVISION=1
 OP_LT_AGE=3
 
 AC_SUBST(OP_LT_CURRENT)
@@ -86,6 +86,7 @@ AM_COND_IF(OP_WIN32,
     )
   )
 )
+AC_SEARCH_LIBS(ftime, [compat], , [enable_http=no])
 
 AS_IF([test "$enable_http" != "no"], [
    openssl="openssl"
