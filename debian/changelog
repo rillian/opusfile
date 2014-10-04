@@ -1,3 +1,11 @@
+opusfile (0.6-1) unstable; urgency=medium
+
+  * Fixes for comment handling.
+  * Fixes header reading for non-Opus streams.
+  * Fixes for zero size METADATA_BLOCK_PICTURE.
+
+ -- Ron Lee <ron@debian.org>  Sat, 04 Oct 2014 10:54:29 +0930
+
 opusfile (0.5-1) unstable; urgency=low
 
   * Much new goodness, too much to list here, see git for details.

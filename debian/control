@@ -4,8 +4,8 @@ Priority: optional
 Maintainer: Ron Lee <ron@debian.org>
 Build-Depends: libopus-dev (>= 1.0.1), libogg-dev (>= 1.3.0), libssl-dev,
                pkg-config, debhelper (>= 5)
-Build-Depends-Indep: doxygen
-Standards-Version: 3.9.5.0
+Build-Depends-Indep: doxygen, graphviz
+Standards-Version: 3.9.6.0
 Homepage: http://www.opus-codec.org
 Vcs-Git: git://git.debian.org/users/ron/opusfile.git
 Vcs-Browser: http://git.debian.org/?p=users/ron/opusfile.git;a=summary
