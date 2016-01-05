@@ -81,8 +81,9 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-noinst_PROGRAMS = examples/opusfile_example$(EXEEXT) \
-	examples/seeking_example$(EXEEXT)
+@OP_ENABLE_EXAMPLES_TRUE@noinst_PROGRAMS =  \
+@OP_ENABLE_EXAMPLES_TRUE@	examples/opusfile_example$(EXEEXT) \
+@OP_ENABLE_EXAMPLES_TRUE@	examples/seeking_example$(EXEEXT)
 @OP_ENABLE_HTTP_TRUE@@OP_WIN32_TRUE@am__append_1 = src/wincerts.c src/winerrno.h
 @OP_ENABLE_HTTP_TRUE@@OP_WIN32_TRUE@am__append_2 = -lws2_32 -lcrypt32
 @OP_WIN32_TRUE@am__append_3 = examples/win32utf8.c examples/win32utf8.h
@@ -976,8 +977,8 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-@HAVE_DOXYGEN_FALSE@uninstall-local:
 @HAVE_DOXYGEN_FALSE@install-data-local:
+@HAVE_DOXYGEN_FALSE@uninstall-local:
 @HAVE_DOXYGEN_FALSE@clean-local:
 clean: clean-am
 
