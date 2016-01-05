@@ -33,9 +33,9 @@ dnl - interfaces added/removed/changed -> increment CURRENT, REVISION = 0
 dnl - interfaces added -> increment AGE
 dnl - interfaces removed -> AGE = 0
 
-OP_LT_CURRENT=3
-OP_LT_REVISION=1
-OP_LT_AGE=3
+OP_LT_CURRENT=4
+OP_LT_REVISION=0
+OP_LT_AGE=4
 
 AC_SUBST(OP_LT_CURRENT)
 AC_SUBST(OP_LT_REVISION)
@@ -124,6 +124,11 @@ AS_IF([test "$enable_fixed_point" = "yes"],
   ]
 )
 
+AC_ARG_ENABLE([examples],
+  AS_HELP_STRING([--disable-examples], [Do not build example applications]),,
+  enable_examples=yes)
+AM_CONDITIONAL([OP_ENABLE_EXAMPLES], [test "$enable_examples" = "yes"])
+
 AS_CASE(["$ac_cv_search_lrintf"],
   ["no"],[],
   ["none required"],[],
@@ -172,6 +177,7 @@ AC_MSG_NOTICE([
 
     Hidden visibility ............ ${cc_cv_flag_visibility}
 
+    API code examples ............ ${enable_examples}
     API documentation ............ ${enable_doc}
 ------------------------------------------------------------------------
 ])

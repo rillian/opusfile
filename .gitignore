@@ -13,6 +13,7 @@ autom4te.cache/
 config.log
 config.status
 doc/Doxyfile
+doc/doxygen-build.stamp
 examples/opusfile_example
 examples/seeking_example
 libopusfile-*.tar.*
@@ -26,6 +27,7 @@ opusfile.pc
 opusfile-uninstalled.pc
 opusurl.pc
 opusurl-uninstalled.pc
+stamp-h1
 unix/objs
 unix/opusfile_example
 unix/seeking_example
