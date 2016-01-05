@@ -4,7 +4,9 @@
 /ci			export-ignore
 doc/release.txt		export-ignore
 doc/Makefile		export-ignore
+/mingw			export-ignore
+releases.sha2		export-ignore
 /unix			export-ignore
 *.vcxproj*		export-ignore
 *.sln			export-ignore
-win32			export-ignore
+/win32			export-ignore
