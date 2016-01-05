@@ -45,11 +45,14 @@ libopusfile.so.0 libopusfile0 #MINVER#
  opus_tags_add_comment@Base 0.5
  opus_tags_clear@Base 0.5
  opus_tags_copy@Base 0.5
+ opus_tags_get_album_gain@Base 0.7
+ opus_tags_get_binary_suffix@Base 0.7
  opus_tags_get_track_gain@Base 0.5
  opus_tags_init@Base 0.5
  opus_tags_parse@Base 0.5
  opus_tags_query@Base 0.5
  opus_tags_query_count@Base 0.5
+ opus_tags_set_binary_suffix@Base 0.7
 libopusurl.so.0 libopusfile0 #MINVER#
  op_open_url@Base 0.5
  op_test_url@Base 0.5
