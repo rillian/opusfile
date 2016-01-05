@@ -1,3 +1,14 @@
+opusfile (0.7-1) unstable; urgency=medium
+
+  * Better overflow check for serialno allocation.
+  * Handle continued packets in bisection search.
+  * Fix timestamp check for seek-free seek.
+  * Buffer continued packet data to reduce seeking.
+  * Add support for R128_ALBUM_GAIN tag.
+  * Fix potential memory leaks with OpusServerInfo.
+
+ -- Ron Lee <ron@debian.org>  Wed, 06 Jan 2016 07:08:02 +1030
+
 opusfile (0.6-1) unstable; urgency=medium
 
   * Fixes for comment handling.
