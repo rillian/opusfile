@@ -1,5 +1,5 @@
 #!/usr/bin/make -f
-# Ron Lee 2003 - 2012
+# Ron Lee 2003 - 2016
 
 #export DH_VERBOSE=1
 export DH_OPTIONS
@@ -21,10 +21,10 @@ HARD_CPPFLAGS = -D_FORTIFY_SOURCE=2
 HARD_CFLAGS   = -Wformat=2
 HARD_LDFLAGS  = -Wl,-z,now
 
-ifneq (,$(filter-out $(DEB_HOST_ARCH), alpha hppa arm))
+ifneq (,$(filter-out alpha hppa arm, $(DEB_HOST_ARCH)))
 	HARD_CFLAGS += -fstack-protector --param ssp-buffer-size=4
 endif
-ifneq (,$(filter-out $(DEB_HOST_ARCH), ia64 hppa avr32))
+ifneq (,$(filter-out ia64 hppa avr32, $(DEB_HOST_ARCH)))
 	HARD_LDFLAGS += -Wl,-z,relro
 endif
 
@@ -46,7 +46,7 @@ ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 endif
 
 
-ifneq (,$(filter $(DEB_HOST_ARCH), arm armel mips mipsel))
+ifneq (,$(filter arm armel mips mipsel, $(DEB_HOST_ARCH)))
 	EXTRA_CONFIG_FLAGS = --enable-fixed-point
 endif
 
