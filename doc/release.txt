@@ -9,7 +9,7 @@ Source release:
 - Verify 'make distcheck' produces a tarball with
   the desired name.
 - Push tag to public repo.
-- Upload source packge 'opusfile-${version}.tar.gz'
+- Upload source package 'opusfile-${version}.tar.gz'
   to website and verify file permissions.
 - Update checksum files on website.
 - Update links on <https://www.opus-codec.org/downloads/>.
@@ -19,6 +19,9 @@ Source release:
 Releases are commited to https://svn.xiph.org/releases/opus/
 which propagates to downloads.xiph.org, and copied manually
 to https://archive.mozilla.org/pub/opus/
+
+Release packages should also be manually attached to the corresponding
+tag on the github mirror https://github.com/xiph/opusfile/releases
 
 Win32 binaries:
 
@@ -31,7 +34,7 @@ Win32 binaries:
   - ./configure --host=i686-w64-mingw32 --prefix=/path/to/builddir/mingw \
         PKG_CONFIG_PATH=/path/to/builddir/mingw/lib/pkgconfig
   - make && make check && make -C doc/latex
-- Add api docs to opus-codec.org
+- Add api docs to opus-codec.org.
 - mkdir opusfile-${version}-win32
 - Copy AUTHORS COPYING README.txt include/opusfile.h to the release dir.
 - Merge changes between README.txt and the version in the last

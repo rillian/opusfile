@@ -14,6 +14,8 @@ config.log
 config.status
 doc/Doxyfile
 doc/doxygen-build.stamp
+doc/html
+doc/latex
 examples/opusfile_example
 examples/seeking_example
 libopusfile-*.tar.*
