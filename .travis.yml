@@ -9,7 +9,7 @@ addons:
       - libopus-dev
 
 install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install libogg opus openssl; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update && brew install libogg opus openssl; fi
 
 script:
   - ./autogen.sh
