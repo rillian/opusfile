@@ -1,14 +1,15 @@
 language: c
 
-# We need at least Ubuntu 14.04 for the libopus dependency.
-sudo: required
-dist: trusty
+os: osx
 
 addons:
   apt:
     packages:
       - libogg-dev
       - libopus-dev
+
+install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install libogg opus openssl; fi
 
 script:
   - ./autogen.sh
